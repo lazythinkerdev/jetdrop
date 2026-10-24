@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>jetdrop — lightweight remote editor</title>
+<link rel="icon" type="image/webp" href="/static/assets/images/logo.webp">
+<link rel="stylesheet" href="/static/styles.css"></head><body>
+<div id="top"><img class="logo" src="/static/assets/images/logo.webp" alt="jetdrop logo"><nav id="menubar" aria-label="main menu"></nav><div id="topsearch"><span>🔍</span><span data-i18n="topSearch">Search files (Ctrl+P)</span></div><span id="srvinfo" style="color:#aaa"></span><span id="lang"><button id="langEn" class="on">EN</button><button id="langId">ID</button></span></div>
+<div id="menudrop" style="display:none"></div>
+<div id="main">
+  <div id="act">
+    <div class="ic on" title="Explorer">🗂️</div>
+  </div>
+  <div id="side">
+    <h3><span data-i18n="explorer">Explorer</span> <span class="tb">
+      <button id="bNewFile" data-i18n-title="tip_newFile" title="New file">📄</button><button id="bNewDir" data-i18n-title="tip_newDir" title="New folder">📁</button>
+      <button id="bUp" data-i18n-title="tip_upload" title="Upload">⬆️</button><button id="bRef" data-i18n-title="tip_refresh" title="Refresh">🔄</button>
+    </span></h3>
+    <div id="tree" tabindex="0"></div>
+  </div>
+  <div id="edwrap">
+    <div id="tabs"></div>
+    <div id="crumb"></div>
+    <div id="editor"><div id="welcome">
+      <img class="wlogo" src="/static/assets/images/logo.webp" alt="jetdrop logo">
+      <div><b>jetdrop</b> — <span data-i18n="welcome_sub">lightweight remote editor — click a file in the Explorer to open</span></div>
+      <div data-i18n-html="welcome_keys"><kbd>Ctrl+S</kbd> save &nbsp; <kbd>Ctrl+P</kbd> quick open</div>
+    </div></div>
+  </div>
+</div>
+<div id="status"><span id="stL" data-i18n="ready">ready</span><span class="r" id="stR"></span></div>
+<div id="palette"><input id="pin" data-i18n-ph="searchPh" placeholder="type a file name…"><div class="pl" id="plist"></div></div>
+<div id="toast"></div>
+<div class="ctx" id="ctx"></div>
+<div id="mvm"><div class="box">
+  <h3 id="mvTitle">Move</h3>
+  <div class="mpath" data-i18n="mvHint">Click a folder to enter it</div>
+  <div id="mvList"></div>
+  <div class="frow"><span data-i18n="mvDestL" style="color:var(--dim);font-size:12px">Destination:</span>
+    <b id="mvDest" style="font-size:13px">/</b></div>
+  <div class="frow"><span data-i18n="mvNameL" style="color:var(--dim);font-size:12px">Name:</span>
+    <input type="text" id="mvName"></div>
+  <div class="fbtn"><button class="ghost" id="mvCancel" data-i18n="mvCancel">Cancel</button>
+    <button id="mvNewDir" data-i18n="mvNewDir">📁 New folder</button><button id="mvOk" data-i18n="mvOk">Move</button></div>
+</div></div>
+<div id="help"><div class="box">
+  <h3><span id="helpTitleEl">Help</span><button id="helpX">×</button></h3>
+  <div id="helpBody"></div>
+  <div class="fbtn"><button id="helpClose" data-i18n="helpClose">Close</button></div>
+</div></div>
+<input type="file" id="upfile" multiple style="display:none">
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/loader.js"></script>
+<script src="/static/app.js" defer></script></body></html>
