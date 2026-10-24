@@ -5,8 +5,8 @@ const $=id=>document.getElementById(id);
 const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 /* ---------- i18n: EN default, ID optional, pilihan tersimpan di browser ---------- */
 const STR={
-en:{explorer:"Explorer",tip_newFile:"New file",tip_newDir:"New folder",tip_upload:"Upload",tip_refresh:"Refresh",welcome_sub:"lightweight remote editor — click a file in the Explorer to open",welcome_keys:"<kbd>Ctrl+S</kbd> save &nbsp; <kbd>Ctrl+P</kbd> quick open",ready:"ready",searchPh:"type a file name…",mvHint:"Click a folder to enter it",mvDestL:"Destination:",mvNameL:"Name:",mvCancel:"Cancel",mvNewDir:"📁 New folder",mvOk:"Move",tokenPrompt:"Write token:",errRead:"failed to read ",errOpen:"failed to open ",unsavedClose:" has unsaved changes. Close?",saving:"saving…",saved:"saved ✓",saveFail:"save failed",destFolder:"Destination folder (empty = root):",fileName:"File name:",created:"created ✓",failed:"failed: ",newFolderPath:"New folder path (e.g. Python/exercise):",folderCreated:"folder created ✓",delConfirm:"Delete",deleted:"deleted ✓",renameTo:"Rename",moved:"moved ✓",moveTitle:"Move",loading:"loading…",up:"⬆️ <i>.. (up)</i>",noFolders:"(no folders yet)",newFolderIn:"New folder name in /",nameEmpty:"name cannot be empty",copyTo:"Copy",copied:"copied ✓",mNewFile:"📄 New file",mNewFolder:"📁 New folder",mRename:"✏️ Rename",mMove:"📂 Move to…",mCopy:"📋 Copy / Duplicate",mDelFolder:"🗑️ Delete folder",mOpen:"✏️ Open",mDelFile:"🗑️ Delete file",folderName:"Folder name:",uploadTo:"Upload to folder (empty = root):",uploadFail:" failed",uploadN:"Upload",uploadDone:"upload complete ✓",loadingList:"loading file list…",filesN:"file(s)",readyBar:"ready — Ctrl+P quick open, Ctrl+S save",topSearch:"Search files (Ctrl+P)",mFile:"File",mView:"View",mHelp:"Help",miNewFile:"New File",miNewFolder:"New Folder",miUpload:"Upload Files…",miSave:"Save",miRefresh:"Refresh Explorer",miPalette:"Quick Open…",miSidebar:"Toggle Sidebar",miAbout:"About jetdrop",miHelp:"Help & Shortcuts",helpTitle:"Help",aboutTitle:"About",helpClose:"Close",hAbout:"About",hGuide:"Getting started",hKeys:"Keyboard shortcuts",aboutBody:"<b>jetdrop</b> v1.0 — lightweight remote editor. Edit files on a remote server from the browser or via API. Python 3.8+, stdlib only.",guide1:"Click a file in the Explorer to open it.",guide2:"Edit, then press Ctrl+S to save.",guide3:"Right-click a file or folder for rename, move, copy, delete.",guide4:"Drag & drop files anywhere to upload to root.",keySave:"Save current file",keyOpen:"Quick-open file",keyEsc:"Close dialogs / palette"},
-id:{explorer:"Explorer",tip_newFile:"File baru",tip_newDir:"Folder baru",tip_upload:"Unggah",tip_refresh:"Segarkan",welcome_sub:"lightweight remote editor, klik file di Explorer untuk membuka",welcome_keys:"<kbd>Ctrl+S</kbd> simpan &nbsp; <kbd>Ctrl+P</kbd> buka cepat",ready:"siap",searchPh:"ketik nama file…",mvHint:"Klik folder untuk masuk ke dalamnya",mvDestL:"Tujuan:",mvNameL:"Nama:",mvCancel:"Batal",mvNewDir:"📁 Folder baru",mvOk:"Pindahkan",tokenPrompt:"Token tulis:",errRead:"gagal baca ",errOpen:"gagal buka ",unsavedClose:" belum disimpan. Tutup?",saving:"menyimpan…",saved:"tersimpan ✓",saveFail:"gagal simpan",destFolder:"Folder tujuan (kosongkan = root):",fileName:"Nama file:",created:"dibuat ✓",failed:"gagal: ",newFolderPath:"Path folder baru (mis. Python/latihan):",folderCreated:"folder dibuat ✓",delConfirm:"Hapus",deleted:"dihapus ✓",renameTo:"Rename",moved:"dipindah ✓",moveTitle:"Pindah",loading:"memuat…",up:"⬆️ <i>.. (naik)</i>",noFolders:"(belum ada folder)",newFolderIn:"Nama folder baru di /",nameEmpty:"nama tidak boleh kosong",copyTo:"Copy",copied:"tercopy ✓",mNewFile:"📄 File baru",mNewFolder:"📁 Folder baru",mRename:"✏️ Rename",mMove:"📂 Pindah ke…",mCopy:"📋 Copy / Duplikat",mDelFolder:"🗑️ Hapus folder",mOpen:"✏️ Buka",mDelFile:"🗑️ Hapus file",folderName:"Nama folder:",uploadTo:"Upload ke folder (kosongkan = root):",uploadFail:" gagal",uploadN:"Upload",uploadDone:"upload selesai ✓",loadingList:"memuat daftar file…",filesN:"file",readyBar:"siap — Ctrl+P buka cepat, Ctrl+S simpan",topSearch:"Cari file (Ctrl+P)",mFile:"File",mView:"Tampilan",mHelp:"Bantuan",miNewFile:"File Baru",miNewFolder:"Folder Baru",miUpload:"Unggah File…",miSave:"Simpan",miRefresh:"Segarkan Explorer",miPalette:"Buka Cepat…",miSidebar:"Tampilkan/Sembunyikan Sidebar",miAbout:"Tentang jetdrop",miHelp:"Bantuan & Shortcut",helpTitle:"Bantuan",aboutTitle:"Tentang",helpClose:"Tutup",hAbout:"Tentang",hGuide:"Mulai cepat",hKeys:"Shortcut keyboard",aboutBody:"<b>jetdrop</b> v1.0 — remote editor ringan. Edit file di server dari browser atau via API. Python 3.8+, stdlib saja.",guide1:"Klik file di Explorer untuk membuka.",guide2:"Edit, lalu tekan Ctrl+S untuk menyimpan.",guide3:"Klik kanan file/folder untuk rename, pindah, copy, hapus.",guide4:"Drag & drop file ke mana saja untuk upload ke root.",keySave:"Simpan file aktif",keyOpen:"Buka cepat file",keyEsc:"Tutup dialog / palette"}};
+en:{explorer:"Explorer",tip_newFile:"New file",tip_newDir:"New folder",tip_upload:"Upload",tip_refresh:"Refresh",welcome_sub:"lightweight remote editor — click a file in the Explorer to open",welcome_keys:"<kbd>Ctrl+S</kbd> save &nbsp; <kbd>Ctrl+P</kbd> quick open",ready:"ready",searchPh:"type a file name…",mvHint:"Click a folder to enter it",mvDestL:"Destination:",mvNameL:"Name:",mvCancel:"Cancel",mvNewDir:"📁 New folder",mvOk:"Move",tokenPrompt:"Write token:",errRead:"failed to read ",errOpen:"failed to open ",unsavedClose:" has unsaved changes. Close?",saving:"saving…",saved:"saved ✓",saveFail:"save failed",destFolder:"Destination folder (empty = root):",fileName:"File name:",created:"created ✓",failed:"failed: ",newFolderPath:"New folder path (e.g. Python/exercise):",folderCreated:"folder created ✓",delConfirm:"Delete",deleted:"deleted ✓",renameTo:"Rename",moved:"moved ✓",moveTitle:"Move",loading:"loading…",up:"⬆️ <i>.. (up)</i>",noFolders:"(no folders yet)",newFolderIn:"New folder name in /",nameEmpty:"name cannot be empty",copyTo:"Copy",copied:"copied ✓",mNewFile:"📄 New file",mNewFolder:"📁 New folder",mRename:"✏️ Rename",mMove:"📂 Move to…",mCopy:"📋 Copy / Duplicate",mDelFolder:"🗑️ Delete folder",mOpen:"✏️ Open",mDelFile:"🗑️ Delete file",folderName:"Folder name:",uploadTo:"Upload to folder (empty = root):",uploadFail:" failed",uploadN:"Upload",uploadDone:"upload complete ✓",loadingList:"loading file list…",filesN:"file(s)",readyBar:"ready — Ctrl+P quick open, Ctrl+S save",topSearch:"Search files (Ctrl+P)",mFile:"File",mView:"View",mHelp:"Help",miNewFile:"New File",miNewFolder:"New Folder",miUpload:"Upload Files…",miSave:"Save",miRefresh:"Refresh Explorer",miPalette:"Quick Open…",miSidebar:"Toggle Sidebar",miAbout:"About jetdrop",miHelp:"Help & Shortcuts",helpTitle:"Help",aboutTitle:"About",helpClose:"Close",hAbout:"About",hGuide:"Getting started",hKeys:"Keyboard shortcuts",aboutBody:"<b>jetdrop</b> v1.0 — lightweight remote editor. Edit files on a remote server from the browser or via API. Python 3.8+, stdlib only.",guide1:"Click a file in the Explorer to open it.",guide2:"Edit, then press Ctrl+S to save.",guide3:"Right-click a file or folder for rename, move, copy, delete.",guide4:"Drag & drop files anywhere to upload to root.",keySave:"Save current file",keyOpen:"Quick-open file",keyEsc:"Close dialogs / palette",confirmTitle:"Confirm",promptTitle:"Enter value",cancelBtn:"Cancel",okBtn:"OK"},
+id:{explorer:"Explorer",tip_newFile:"File baru",tip_newDir:"Folder baru",tip_upload:"Unggah",tip_refresh:"Segarkan",welcome_sub:"lightweight remote editor, klik file di Explorer untuk membuka",welcome_keys:"<kbd>Ctrl+S</kbd> simpan &nbsp; <kbd>Ctrl+P</kbd> buka cepat",ready:"siap",searchPh:"ketik nama file…",mvHint:"Klik folder untuk masuk ke dalamnya",mvDestL:"Tujuan:",mvNameL:"Nama:",mvCancel:"Batal",mvNewDir:"📁 Folder baru",mvOk:"Pindahkan",tokenPrompt:"Token tulis:",errRead:"gagal baca ",errOpen:"gagal buka ",unsavedClose:" belum disimpan. Tutup?",saving:"menyimpan…",saved:"tersimpan ✓",saveFail:"gagal simpan",destFolder:"Folder tujuan (kosongkan = root):",fileName:"Nama file:",created:"dibuat ✓",failed:"gagal: ",newFolderPath:"Path folder baru (mis. Python/latihan):",folderCreated:"folder dibuat ✓",delConfirm:"Hapus",deleted:"dihapus ✓",renameTo:"Rename",moved:"dipindah ✓",moveTitle:"Pindah",loading:"memuat…",up:"⬆️ <i>.. (naik)</i>",noFolders:"(belum ada folder)",newFolderIn:"Nama folder baru di /",nameEmpty:"nama tidak boleh kosong",copyTo:"Copy",copied:"tercopy ✓",mNewFile:"📄 File baru",mNewFolder:"📁 Folder baru",mRename:"✏️ Rename",mMove:"📂 Pindah ke…",mCopy:"📋 Copy / Duplikat",mDelFolder:"🗑️ Hapus folder",mOpen:"✏️ Buka",mDelFile:"🗑️ Hapus file",folderName:"Nama folder:",uploadTo:"Upload ke folder (kosongkan = root):",uploadFail:" gagal",uploadN:"Upload",uploadDone:"upload selesai ✓",loadingList:"memuat daftar file…",filesN:"file",readyBar:"siap — Ctrl+P buka cepat, Ctrl+S simpan",topSearch:"Cari file (Ctrl+P)",mFile:"File",mView:"Tampilan",mHelp:"Bantuan",miNewFile:"File Baru",miNewFolder:"Folder Baru",miUpload:"Unggah File…",miSave:"Simpan",miRefresh:"Segarkan Explorer",miPalette:"Buka Cepat…",miSidebar:"Tampilkan/Sembunyikan Sidebar",miAbout:"Tentang jetdrop",miHelp:"Bantuan & Shortcut",helpTitle:"Bantuan",aboutTitle:"Tentang",helpClose:"Tutup",hAbout:"Tentang",hGuide:"Mulai cepat",hKeys:"Shortcut keyboard",aboutBody:"<b>jetdrop</b> v1.0 — remote editor ringan. Edit file di server dari browser atau via API. Python 3.8+, stdlib saja.",guide1:"Klik file di Explorer untuk membuka.",guide2:"Edit, lalu tekan Ctrl+S untuk menyimpan.",guide3:"Klik kanan file/folder untuk rename, pindah, copy, hapus.",guide4:"Drag & drop file ke mana saja untuk upload ke root.",keySave:"Simpan file aktif",keyOpen:"Buka cepat file",keyEsc:"Tutup dialog / palette",confirmTitle:"Konfirmasi",promptTitle:"Masukkan nilai",cancelBtn:"Batal",okBtn:"OK"}};
 let LANG=localStorage.getItem("rw_lang")||"en";
 const t=k=>STR[LANG][k]??STR.en[k]??k;
 function setLang(l){LANG=l;localStorage.setItem("rw_lang",l);document.documentElement.lang=l;
@@ -20,13 +20,13 @@ function toast(m,ok=true){const t=$("toast");t.textContent=m;
 t.style.borderColor=ok?"#4caf50":"#f44336";t.style.display="block";
 clearTimeout(t._h);t._h=setTimeout(()=>t.style.display="none",2600);}
 function setStatus(m){$("stL").textContent=m;}
-function needToken(){TOKEN=prompt(t("tokenPrompt"))||"";localStorage.setItem("rw_token",TOKEN);}
+async function needToken(){TOKEN=await customPrompt(t("tokenPrompt"))||"";localStorage.setItem("rw_token",TOKEN);}
 const urlFor=p=>"/"+String(p||"").replace(/^\/+/g,"").split("/").map(encodeURIComponent).join("/");
 async function api(path,opt={}){
   opt.headers=Object.assign({},opt.headers||{});
   if(TOKEN)opt.headers["Authorization"]="Bearer "+TOKEN;
   const r=await fetch(path,opt);
-  if(r.status===401&&!opt._retry){needToken();opt._retry=1;return api(path,opt);}
+  if(r.status===401&&!opt._retry){await needToken();opt._retry=1;return api(path,opt);}
   return r;
 }
 const LANGS={py:"python",js:"javascript",jsx:"javascript",ts:"typescript",tsx:"typescript",
@@ -149,9 +149,9 @@ function renderTabs(){
     t.appendChild(d);
   }
 }
-function closeTab(p){
+async function closeTab(p){
   const m=modelMap[p];
-  if(m.dirty&&!confirm(p.split("/").pop()+t("unsavedClose")))return;
+  if(m.dirty&&!(await customConfirm(p.split("/").pop()+t("unsavedClose"))))return;
   openTabs=openTabs.filter(x=>x!==p);delete modelMap[p];
   if(activePath===p){activePath=openTabs[openTabs.length-1]||null;
     if(activePath)showInEditor();else location.reload();}
@@ -169,27 +169,27 @@ async function saveFile(){
 }
 /* ---------- actions ---------- */
 async function newFile(){
-  const dir=prompt(t("destFolder"),"")||"";
-  const name=prompt(t("fileName"));if(!name)return;
+  const dir=await customPrompt(t("destFolder"),"")||"";
+  const name=await customPrompt(t("fileName"));if(!name)return;
   const p=(dir?dir.replace(/^\/|\/$/g,"")+"/":"")+name;
   const r=await api(urlFor(p),{method:"PUT",body:""});
   if(r.ok){toast(t("created"));renderTree();openFile(p);}else toast(t("failed")+r.status,false);
 }
 async function newDir(){
-  const p=prompt(t("newFolderPath"));if(!p)return;
+  const p=await customPrompt(t("newFolderPath"));if(!p)return;
   const r=await api("/api/mkdir",{method:"POST",headers:{"Content-Type":"application/json"},
     body:JSON.stringify({path:p})});
   if(r.ok){toast(t("folderCreated"));renderTree();}else toast(t("failed")+r.status,false);
 }
 async function delPath(path,type){
-  if(!confirm(`${t("delConfirm")} ${type} "${path}"?`))return;
+  if(!(await customConfirm(`${t("delConfirm")} ${type} "${path}"?`)))return;
   const r=await api(urlFor(path),{method:"DELETE"});
   if(r.ok){toast(t("deleted"));if(openTabs.includes(path))closeTab(path);renderTree();}
   else toast(t("failed")+r.status,false);
 }
 async function renamePath(path,type){
   const old=path.split("/").pop();
-  const n=prompt(`${t("renameTo")} ${type} "${old}":`,old);
+  const n=await customPrompt(`${t("renameTo")} ${type} "${old}":`,old);
   if(!n||n===old)return;
   const dir=path.split("/").slice(0,-1).join("/");
   await doMove(path,dir?dir+"/"+n:n);
@@ -248,7 +248,7 @@ async function mvRender(){
 $("mvCancel").onclick=()=>$("mvm").style.display="none";
 $("mvm").addEventListener("click",e=>{if(e.target.id==="mvm")$("mvm").style.display="none";});
 $("mvNewDir").onclick=async()=>{
-  const n=prompt(`${t("newFolderIn")}${mvCur||""} :`);
+  const n=await customPrompt(`${t("newFolderIn")}${mvCur||""} :`);
   if(!n)return;
   const p=mvCur?mvCur+"/"+n:n;
   const r=await api("/api/mkdir",{method:"POST",headers:{"Content-Type":"application/json"},
@@ -265,7 +265,7 @@ $("mvOk").onclick=async()=>{
 };
 async function copyPath(path,type){
   const suggest=path.replace(/(\.[^./]+)?$/,"-copy$1");
-  const to=prompt(`${t("copyTo")} ${type}:`,suggest);
+  const to=await customPrompt(`${t("copyTo")} ${type}:`,suggest);
   if(!to||to===path)return;
   const clean=to.replace(/^\/+/,"");
   const r=await api("/api/copy",{method:"POST",headers:{"Content-Type":"application/json"},
@@ -277,8 +277,9 @@ function ctxMenu(e,path,type){
   e.preventDefault();
   const c=$("ctx");c.innerHTML="";
   const items=type==="dir"?
-    [[t("mNewFile"),()=>{const n=prompt(t("fileName"));if(n)api(urlFor(path+"/"+n),{method:"PUT",body:""}).then(()=>{toast(t("created"));renderTree();});}],
-     [t("mNewFolder"),()=>{const n=prompt(t("folderName"));if(n)api("/api/mkdir",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({path:path+"/"+n})}).then(()=>{toast(t("folderCreated"));renderTree();});}],
+    [[t("mNewFile"),async()=>{const n=await customPrompt(t("fileName"));if(n)api(urlFor(path+"/"+n),{method:"PUT",body:""}).then(()=>{toast(t("created"));renderTree();});}],
+     [t("mNewFolder"),async()=>{const n=await customPrompt(t("folderName"));if(n)api("/api/mkdir",{method:"POST",headers:{"Content-Type":"application/json"},
+body:JSON.stringify({path:path+"/"+n})}).then(()=>{toast(t("folderCreated"));renderTree();});}],
      [t("mRename"),()=>renamePath(path,"folder")],
      [t("mMove"),()=>openMoveDialog(path,"folder")],
      [t("mCopy"),()=>copyPath(path,"folder")],
@@ -297,7 +298,7 @@ document.addEventListener("click",()=>$("ctx").style.display="none");
 $("bUp").onclick=()=>$("upfile").click();
 $("upfile").onchange=async e=>{
   const files=e.target.files;if(!files.length)return;
-  const dest=prompt(t("uploadTo"),"")||"";
+  const dest=await customPrompt(t("uploadTo"),"")||"";
   for(const f of files){
     const fd=new FormData();fd.append("f",f);
     const r=await api(`/upload?path=${encodeURIComponent("/"+dest)}`,{method:"POST",body:fd});
@@ -310,7 +311,7 @@ $("upfile").onchange=async e=>{
 document.addEventListener("drop",async e=>{
   e.preventDefault();
   if(!e.dataTransfer.files.length)return;
-  if(!confirm(`${t("uploadN")} ${e.dataTransfer.files.length} file(s)?`))return;
+  if(!(await customConfirm(`${t("uploadN")} ${e.dataTransfer.files.length} file(s)?`)))return;
   for(const f of e.dataTransfer.files){
     const fd=new FormData();fd.append("f",f);
     await api("/upload?path=/",{method:"POST",body:fd});

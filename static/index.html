@@ -3,7 +3,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>jetdrop — lightweight remote editor</title>
 <link rel="icon" type="image/webp" href="/static/assets/images/logo.webp">
-<link rel="stylesheet" href="/static/styles.css"></head><body>
+<link rel="stylesheet" href="/static/styles.css">
+<script src="https://cdn.tailwindcss.com"></script></head><body>
 <div id="top"><img class="logo" src="/static/assets/images/logo.webp" alt="jetdrop logo"><nav id="menubar" aria-label="main menu"></nav><div id="topsearch"><span>🔍</span><span data-i18n="topSearch">Search files (Ctrl+P)</span></div><span id="srvinfo" style="color:#aaa"></span><span id="lang"><button id="langEn" class="on">EN</button><button id="langId">ID</button></span></div>
 <div id="menudrop" style="display:none"></div>
 <div id="main">
@@ -48,5 +49,32 @@
   <div class="fbtn"><button id="helpClose" data-i18n="helpClose">Close</button></div>
 </div></div>
 <input type="file" id="upfile" multiple style="display:none">
+<!-- shadcn/ui-style custom dialogs (replace native alert/confirm/prompt) -->
+<div id="confirmDialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" hidden>
+  <div class="bg-[#252526] border border-[#3e3e3e] rounded-lg shadow-xl w-full max-w-md">
+    <div class="p-6">
+      <h3 class="text-lg font-semibold text-[#cccccc] mb-2" id="confirmTitle">Confirm</h3>
+      <p class="text-sm text-[#858585] mb-6" id="confirmMessage"></p>
+      <div class="flex justify-end gap-3">
+        <button id="confirmCancel" class="px-4 py-2 text-sm rounded-md border border-[#3e3e3e] text-[#cccccc] hover:bg-[#3c3c3c] transition-colors">Cancel</button>
+        <button id="confirmOk" class="px-4 py-2 text-sm rounded-md bg-[#0e639c] text-white hover:bg-[#1a7bb8] transition-colors">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="promptDialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" hidden>
+  <div class="bg-[#252526] border border-[#3e3e3e] rounded-lg shadow-xl w-full max-w-md">
+    <div class="p-6">
+      <h3 class="text-lg font-semibold text-[#cccccc] mb-2" id="promptTitle">Prompt</h3>
+      <p class="text-sm text-[#858585] mb-4" id="promptMessage"></p>
+      <input type="text" id="promptInput" class="w-full px-3 py-2 mb-6 bg-[#3c3c3c] border border-[#3e3e3e] rounded-md text-[#cccccc] text-sm outline-none focus:border-[#0e639c] transition-colors">
+      <div class="flex justify-end gap-3">
+        <button id="promptCancel" class="px-4 py-2 text-sm rounded-md border border-[#3e3e3e] text-[#cccccc] hover:bg-[#3c3c3c] transition-colors">Cancel</button>
+        <button id="promptOk" class="px-4 py-2 text-sm rounded-md bg-[#0e639c] text-white hover:bg-[#1a7bb8] transition-colors">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs/loader.js"></script>
+<script src="/static/confirm.js"></script>
 <script src="/static/app.js" defer></script></body></html>
