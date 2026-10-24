@@ -1,6 +1,6 @@
 "use strict";
 /**
- * Custom shadcn/ui-style confirmation & prompt dialogs.
+ * Custom shadcn/ui-style confirmation, prompt & alert dialogs.
  * Replaces native window.confirm / window.prompt / window.alert.
  * Async/Promise-based so callers await instead of blocking.
  */
@@ -8,82 +8,149 @@
 const $c = id => document.getElementById(id);
 
 let CD = null, PD = null;
-let _resolve = null;
+let activeResolver = null;
+let activeDialog = null;
 
 function initDialogs() {
-  CD = { dialog: $c("confirmDialog"), msg: $c("confirmMessage"), title: $c("confirmTitle"), ok: $c("confirmOk"), cancel: $c("confirmCancel") };
-  PD = { dialog: $c("promptDialog"), msg: $c("promptMessage"), title: $c("promptTitle"), input: $c("promptInput"), ok: $c("promptOk"), cancel: $c("promptCancel") };
+  CD = {
+    dialog: $c("confirmDialog"),
+    title: $c("confirmTitle"),
+    msg: $c("confirmMessage"),
+    ok: $c("confirmOk"),
+    cancel: $c("confirmCancel")
+  };
+  PD = {
+    dialog: $c("promptDialog"),
+    title: $c("promptTitle"),
+    msg: $c("promptMessage"),
+    input: $c("promptInput"),
+    ok: $c("promptOk"),
+    cancel: $c("promptCancel")
+  };
 }
 
-function showDialog(d, titleKey) {
-  if (typeof t === "function") {
-    d.title.textContent = t(titleKey);
-    d.cancel.textContent = t("cancelBtn");
-    d.ok.textContent = t("okBtn");
+function resolveTitle(titleKeyOrText, defaultKey) {
+  if (titleKeyOrText) {
+    if (typeof t === "function") {
+      const translated = t(titleKeyOrText);
+      if (translated && translated !== titleKeyOrText) return translated;
+    }
+    return titleKeyOrText;
   }
-  d.dialog.style.display = "flex";
-  d.dialog.hidden = false;
-  void d.dialog.offsetWidth;
-  d.dialog.focus();
+  return (typeof t === "function") ? t(defaultKey) : defaultKey;
 }
 
-function hideDialog(d) {
-  d.dialog.style.display = "none";
-  d.dialog.hidden = true;
+function closeDialog(result) {
+  if (activeDialog) {
+    activeDialog.style.display = "none";
+    activeDialog = null;
+  }
+  if (activeResolver) {
+    const fn = activeResolver;
+    activeResolver = null;
+    fn(result);
+  }
+}
+
+function showModal(d, resolver) {
+  // If there was an existing pending dialog, dismiss it cleanly first
+  if (activeResolver) {
+    const prevResolver = activeResolver;
+    activeResolver = null;
+    prevResolver(null);
+  }
+  activeDialog = d.dialog;
+  activeResolver = resolver;
+  d.dialog.style.display = "flex";
 }
 
 function customConfirm(message, titleKey) {
   return new Promise(resolve => {
-    CD.msg.textContent = message;
-    showDialog(CD, titleKey || "confirmTitle");
-    _resolve = v => { resolve(v); hideDialog(CD); };
-  });
-}
-
-function customPrompt(message, defaultValue, titleKey) {
-  return new Promise(resolve => {
-    PD.msg.textContent = message;
-    PD.input.value = defaultValue || "";
-    showDialog(PD, titleKey || "promptTitle");
-    PD.input.focus();
-    PD.input.select();
-    _resolve = v => { resolve(v); hideDialog(PD); };
+    if (!CD) initDialogs();
+    CD.title.textContent = resolveTitle(titleKey, "confirmTitle");
+    CD.msg.textContent = message || "";
+    CD.cancel.style.display = "inline-flex";
+    CD.cancel.textContent = (typeof t === "function") ? t("cancelBtn") : "Cancel";
+    CD.ok.textContent = (typeof t === "function") ? t("okBtn") : "OK";
+    showModal(CD, resolve);
+    CD.ok.focus();
   });
 }
 
 function customAlert(message, titleKey) {
   return new Promise(resolve => {
-    CD.msg.textContent = message;
-    showDialog(CD, titleKey || "confirmTitle");
+    if (!CD) initDialogs();
+    CD.title.textContent = resolveTitle(titleKey, "alertTitle");
+    CD.msg.textContent = message || "";
+    CD.cancel.style.display = "none";
     CD.ok.textContent = (typeof t === "function") ? t("okBtn") : "OK";
-    _resolve = v => { resolve(v); hideDialog(CD); };
+    showModal(CD, () => resolve(true));
+    CD.ok.focus();
+  });
+}
+
+function customPrompt(message, defaultValue, titleKey) {
+  return new Promise(resolve => {
+    if (!PD) initDialogs();
+    PD.title.textContent = resolveTitle(titleKey, "promptTitle");
+    PD.msg.textContent = message || "";
+    PD.cancel.textContent = (typeof t === "function") ? t("cancelBtn") : "Cancel";
+    PD.ok.textContent = (typeof t === "function") ? t("okBtn") : "OK";
+    PD.input.value = defaultValue ?? "";
+    showModal(PD, resolve);
+    setTimeout(() => {
+      PD.input.focus();
+      PD.input.select();
+    }, 20);
   });
 }
 
 function setupDialogButtons() {
+  if (!CD || !PD) initDialogs();
+
   [CD.dialog, PD.dialog].forEach(d => {
     d.addEventListener("click", e => {
-      if (e.target === d && _resolve) {
-        const isConfirm = d === CD.dialog;
-        _resolve(isConfirm ? false : null);
+      if (e.target === d) {
+        closeDialog(d === CD.dialog ? false : null);
       }
     });
   });
-  CD.ok.onclick = () => { if (_resolve) _resolve(true); };
-  CD.cancel.onclick = () => { if (_resolve) _resolve(false); };
-  PD.ok.onclick = () => { if (_resolve) _resolve(PD.input.value); };
-  PD.cancel.onclick = () => { if (_resolve) _resolve(null); };
+
+  CD.ok.onclick = () => closeDialog(true);
+  CD.cancel.onclick = () => closeDialog(false);
+
+  PD.ok.onclick = () => closeDialog(PD.input.value);
+  PD.cancel.onclick = () => closeDialog(null);
+
+  PD.input.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      closeDialog(PD.input.value);
+    }
+  });
+
   document.addEventListener("keydown", e => {
-    if (e.key === "Escape" && !CD.dialog.hidden && _resolve) { _resolve(false); }
-    if (e.key === "Escape" && !PD.dialog.hidden && _resolve) { _resolve(null); }
-    if (e.key === "Enter" && !CD.dialog.hidden && _resolve) { _resolve(true); }
-    if (e.key === "Enter" && !PD.dialog.hidden && _resolve) { _resolve(PD.input.value); }
+    if (!activeDialog) return;
+    if (e.key === "Escape") {
+      e.preventDefault();
+      closeDialog(activeDialog === CD.dialog ? false : null);
+    } else if (e.key === "Enter" && activeDialog === CD.dialog) {
+      e.preventDefault();
+      closeDialog(true);
+    }
   });
 }
 
-initDialogs();
-setupDialogButtons();
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    initDialogs();
+    setupDialogButtons();
+  });
+} else {
+  initDialogs();
+  setupDialogButtons();
+}
+
 window.customConfirm = customConfirm;
 window.customPrompt = customPrompt;
 window.customAlert = customAlert;
-
