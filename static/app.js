@@ -35,14 +35,23 @@ xml:"xml",go:"go",php:"php",cs:"csharp",c:"c",cpp:"cpp",h:"cpp",hpp:"cpp",java:"
 rb:"ruby",rs:"rust",sh:"shell",bash:"shell",sql:"sql",txt:"plaintext",vue:"html"};
 const langOf=p=>LANGS[(p.split(".").pop()||"").toLowerCase()]||"plaintext";
 /* ---------- tree ---------- */
+let openDirs=new Set();
+function expandToPath(path){
+  const parts=String(path||"").split("/").filter(Boolean);
+  let cur="";
+  for(let i=0;i<parts.length-1;i++){
+    cur=cur?cur+"/"+parts[i]:parts[i];
+    openDirs.add(cur);
+  }
+}
 async function loadDir(path){
   const r=await api(urlFor(path)+"?format=json");
   if(!r.ok)throw new Error(t("errRead")+path);
   return r.json();
 }
-function renderTree(){
+async function renderTree(){
   const t=$("tree");t.innerHTML="";
-  buildLevel(t,"",0);
+  await buildLevel(t,"",0);
 }
 async function buildLevel(el,path,depth){
   let items;
@@ -53,29 +62,42 @@ async function buildLevel(el,path,depth){
     const d=document.createElement("div");
     d.className="nd";d.style.paddingLeft=(8+depth*16)+"px";
     d.dataset.path=full;d.dataset.type=it.type;
-    d.innerHTML=`<span class="tw">${it.type==="dir"?"▶":""}</span>
+    const isOpen=it.type==="dir"&&openDirs.has(full);
+    d.innerHTML=`<span class="tw">${it.type==="dir"?(isOpen?"▼":"▶"):""}</span>
       <span>${it.type==="dir"?"📁":"📄"}</span><span class="nm">${esc(it.name)}</span>`;
     if(it.type==="dir"){
+      if(isOpen)d.classList.add("open");
       d.onclick=e=>{e.stopPropagation();toggleDir(d,full);};
       d.oncontextmenu=e=>ctxMenu(e,full,"dir");
     }else{
+      if(activePath===full)d.classList.add("sel");
       d.onclick=()=>openFile(full);
       d.oncontextmenu=e=>ctxMenu(e,full,"file");
     }
     el.appendChild(d);
+    if(isOpen){
+      const wrap=document.createElement("div");
+      d._sub=wrap;
+      el.appendChild(wrap);
+      await buildLevel(wrap,full,depth+1);
+    }
   }
 }
 function toggleDir(d,full){
   const tw=d.querySelector(".tw");
   const open=d.classList.toggle("open");
   tw.textContent=open?"▼":"▶";
-  let sub=d.nextSibling;
   if(open){
+    openDirs.add(full);
     const wrap=document.createElement("div");
     const depth=(parseInt(d.style.paddingLeft)-8)/16+1;
     d.parentNode.insertBefore(wrap,d.nextSibling);
     d._sub=wrap;buildLevel(wrap,full,depth);
-  }else if(d._sub){d._sub.remove();d._sub=null;}
+  }else{
+    openDirs.delete(full);
+    [...openDirs].forEach(p=>{if(p.startsWith(full+"/"))openDirs.delete(p);});
+    if(d._sub){d._sub.remove();d._sub=null;}
+  }
 }
 /* ---------- tabs & editor ---------- */
 function ensureEditor(cb){
@@ -175,20 +197,38 @@ async function newFile(){
   const cleanName=name.trim().replace(/^\/+/g,"");
   const p=(cleanDir?cleanDir+"/":"")+cleanName;
   const r=await api(urlFor(p),{method:"PUT",body:""});
-  if(r.ok){toast(t("created"));treeCache={};renderTree();openFile(p);}else toast(t("failed")+r.status,false);
+  if(r.ok){
+    toast(t("created"));
+    expandToPath(p);
+    treeCache={};
+    await renderTree();
+    openFile(p);
+  }else toast(t("failed")+r.status,false);
 }
 async function newDir(){
   const p=await customPrompt(t("newFolderPath"));if(!p||!p.trim())return;
   const clean=p.trim().replace(/^\/|\/$/g,"");
   const r=await api("/api/mkdir",{method:"POST",headers:{"Content-Type":"application/json"},
     body:JSON.stringify({path:clean})});
-  if(r.ok){toast(t("folderCreated"));treeCache={};renderTree();}else toast(t("failed")+r.status,false);
+  if(r.ok){
+    toast(t("folderCreated"));
+    expandToPath(clean);
+    openDirs.add(clean);
+    treeCache={};
+    await renderTree();
+  }else toast(t("failed")+r.status,false);
 }
 async function delPath(path,type){
   if(!(await customConfirm(`${t("delConfirm")} ${type} "${path}"?`)))return;
   const r=await api(urlFor(path),{method:"DELETE"});
-  if(r.ok){toast(t("deleted"));if(openTabs.includes(path))closeTab(path);treeCache={};renderTree();}
-  else toast(t("failed")+r.status,false);
+  if(r.ok){
+    toast(t("deleted"));
+    openDirs.delete(path);
+    [...openDirs].forEach(p=>{if(p.startsWith(path+"/"))openDirs.delete(p);});
+    if(openTabs.includes(path))closeTab(path);
+    treeCache={};
+    await renderTree();
+  }else toast(t("failed")+r.status,false);
 }
 async function renamePath(path,type){
   const old=path.split("/").pop();
@@ -202,12 +242,20 @@ async function doMove(from,to){
     body:JSON.stringify({from:"/"+from,to:"/"+to})});
   if(r.ok){
     toast(t("moved"));
+    if(openDirs.has(from)){openDirs.delete(from);openDirs.add(to);}
+    [...openDirs].forEach(p=>{
+      if(p.startsWith(from+"/")){
+        openDirs.delete(p);
+        openDirs.add(to+"/"+p.slice(from.length+1));
+      }
+    });
+    expandToPath(to);
     const i=openTabs.indexOf(from);
     if(i>=0){
       openTabs[i]=to;modelMap[to]=modelMap[from];delete modelMap[from];
       if(activePath===from)activePath=to;
     }
-    treeCache={};renderTree();renderTabs();
+    treeCache={};await renderTree();renderTabs();
     if(activePath)showInEditor();
   }else toast(t("failed")+r.status,false);
   return r.ok;
@@ -363,7 +411,12 @@ function renderPalActive(){
 }
 /* ---------- VS Code-style menubar ---------- */
 let menuOpen=null;
-function toggleSide(){$("side").style.display=$("side").style.display==="none"?"":"none";}
+function toggleSide(){
+  const s=$("side");
+  const isHidden=s.style.display==="none";
+  s.style.display=isHidden?"":"none";
+  document.querySelector("#act .ic")?.classList.toggle("on", isHidden);
+}
 function showHelp(){$("helpTitleEl").textContent=t("helpTitle");const b=$("helpBody");
 b.innerHTML=`<h4>${esc(t("hGuide"))}</h4><div>1. ${esc(t("guide1"))}<br>2. ${esc(t("guide2"))}<br>3. ${esc(t("guide3"))}<br>4. ${esc(t("guide4"))}</div>`+
 `<h4>${esc(t("hKeys"))}</h4><table>`+
@@ -417,7 +470,8 @@ function openDropdown(m,wrap){
 }
 document.addEventListener("click",e=>{if(!e.target.closest("#menudrop")&&!e.target.closest(".mb")){$("menudrop").style.display="none";menuOpen=null;document.querySelectorAll(".mb").forEach(x=>x.classList.remove("open"));}});
 /* init */
-$("bNewFile").onclick=newFile;$("bNewDir").onclick=newDir;$("bRef").onclick=()=>{treeCache={};renderTree();};
+$("bNewFile").onclick=newFile;$("bNewDir").onclick=newDir;$("bRef").onclick=async()=>{treeCache={};await renderTree();};
+document.querySelector("#act .ic").onclick=toggleSide;
 $("topsearch").onclick=openPalette;
 $("helpClose").onclick=hideHelp;$("helpX").onclick=hideHelp;
 $("help").addEventListener("click",e=>{if(e.target.id==="help")hideHelp();});
